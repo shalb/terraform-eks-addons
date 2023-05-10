@@ -1,0 +1,20 @@
+controller:
+  service:
+    appProtocol: false
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: instance
+      service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+      service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
+      service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+      service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: proxy_protocol_v2.enabled=true
+      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    type: "LoadBalancer"
+    externalTrafficPolicy: Local
+  kind: DaemonSet
+  admissionWebhooks:
+    enabled: false
+  config:
+    use-geoip2: true
+    use-proxy-protocol: "true"
+  ingressClassResource:
+    default: true

@@ -1,0 +1,6 @@
+policy: sync
+serviceAccount:
+  create: true
+metrics:
+  enabled: true
+logLevel: debug

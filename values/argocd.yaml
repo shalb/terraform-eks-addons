@@ -1,0 +1,21 @@
+server:
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      kubernetes.io/tls-acme: true
+    tls:
+      - secretName: "argocd-secret"
+  extraArgs:
+    - --insecure
+  certificate:
+    issuer:
+      kind: "ClusterIssuer"
+      name: "letsencrypt-prod"
+    enabled: true
+configs:
+  secret:
+    argocdServerAdminPasswordMtime: "2021-01-01T00:00:00Z"
+service:
+  type: "LoadBalancer"
