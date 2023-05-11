@@ -181,21 +181,3 @@ variable "email" {
   description = "Organization email for LE issuers"
   default     = ""
 }
-
-variable "route53_generated_domain" {
-  type        = string
-  description = "DNS zone for generated domains. Enable certificates for generated route53 zone with cross-account access"
-  default     = ""
-}
-
-variable "route53_generated_accessKeyID" {
-  type        = string
-  description = "generated domains route53 accessKeyID"
-  default     = ""
-}
-
-variable "route53_generated_secretAccessKey" {
-  type        = string
-  description = "generated domains route53 secretAccessKey"
-  default     = ""
-}

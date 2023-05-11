@@ -64,9 +64,6 @@ Terraform module that install core addons in EKS cluster:
 | region | EKS cluster region | `string` | n/a | yes |
 | reloader\_version | Reloader chart version | `string` | `"v0.0.118"` | no |
 | route53\_domain | DNS domain to create apps DNS records for applications | `string` | n/a | yes |
-| route53\_generated\_accessKeyID | generated domains route53 accessKeyID | `string` | `""` | no |
-| route53\_generated\_domain | DNS zone for generated domains. Enable certificates for generated route53 zone with cross-account access | `string` | `""` | no |
-| route53\_generated\_secretAccessKey | generated domains route53 secretAccessKey | `string` | `""` | no |
 | route53\_zone\_id | The id of the route53 to create apps DNS records (for external dns) | `string` | n/a | yes |
 
 ## Outputs

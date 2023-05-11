@@ -25,14 +25,10 @@ resource "null_resource" "cluster_issuers" {
   triggers = {
     kubeconfig = var.cluster_kubeconfig
     manifest = templatefile("${path.module}/templates/issuers.yaml", {
-      email                             = local.email,
-      region                            = var.region,
-      enable_http                       = var.enable_cert_manager_http_issuers,
-      main_route53_zone                 = var.route53_domain,
-      enable_generated_domain_solver    = var.route53_generated_domain == "" ? false : true,
-      route53_generated_domain          = var.route53_generated_domain,
-      route53_generated_accessKeyID     = var.route53_generated_accessKeyID,
-      route53_generated_secretAccessKey = var.route53_generated_secretAccessKey,
+      email             = local.email,
+      region            = var.region,
+      enable_http       = var.enable_cert_manager_http_issuers,
+      main_route53_zone = var.route53_domain,
     })
   }
   provisioner "local-exec" {
