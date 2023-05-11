@@ -111,7 +111,7 @@ resource "kubernetes_manifest" "cluster_issuer_le_prod_http01" {
           {
             http01 = {
               ingress = {
-                class = nginx
+                class = "nginx"
               }
             }
           },
@@ -143,7 +143,7 @@ resource "kubernetes_manifest" "cluster_issuer_le_staging_http01" {
           {
             http01 = {
               ingress = {
-                class = nginx
+                class = "nginx"
               }
             }
           },
