@@ -7,7 +7,7 @@ resource "helm_release" "argocd" {
   create_namespace = true
   name             = "argocd"
   depends_on = [
-    kubernetes_manifest.cluster_issuer_le_prod_dns01
+    null_resource.cluster_issuers
   ]
   values = [
     "${file("${path.module}/values/argocd.yaml")}"

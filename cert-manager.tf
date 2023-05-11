@@ -5,7 +5,7 @@ resource "helm_release" "cert_manager" {
   name             = "cert-manager"
   repository       = "https://charts.jetstack.io"
   chart            = "cert-manager"
-  version          = var.cert_manager_version
+  version          = var.cert_manager_version # "v1.5.4"
   values = [
     "${file("${path.module}/values/cert-manager.yaml")}"
   ]
@@ -15,140 +15,33 @@ resource "helm_release" "cert_manager" {
   }
 }
 
-resource "kubernetes_manifest" "cluster_issuer_le_prod_dns01" {
+resource "null_resource" "cluster_issuers" {
   count = var.enable_cert_manager ? 1 : 0
   depends_on = [
     helm_release.cert_manager
   ]
-  manifest = {
-    apiVersion = "cert-manager.io/v1"
-    kind       = "ClusterIssuer"
-    metadata = {
-      name = "letsencrypt-prod"
-    }
-    spec = {
-      acme = {
-        email = local.email
-        privateKeySecretRef = {
-          name = "letsencrypt-prod"
-        }
-        server = "https://acme-v02.api.letsencrypt.org/directory"
-        solvers = [
-          {
-            dns01 = {
-              route53 = {
-                region = var.region
-              }
-            }
-            selector = {
-              dnsZones = [
-                var.route53_domain,
-              ]
-            }
-          },
-        ]
-      }
-    }
+  triggers = {
+    kubeconfig = var.cluster_kubeconfig
+    manifest = templatefile("${path.module}/templates/issuers.yaml", {
+      email             = local.email,
+      region            = var.region,
+      enable_http       = var.enable_cert_manager_http_issuers,
+      main_route53_zone = var.route53_domain,
+    })
   }
-}
-
-resource "kubernetes_manifest" "cluster_issuer_le_staging_dns01" {
-  count = var.enable_cert_manager ? 1 : 0
-  depends_on = [
-    helm_release.cert_manager
-  ]
-  manifest = {
-    apiVersion = "cert-manager.io/v1"
-    kind       = "ClusterIssuer"
-    metadata = {
-      name = "letsencrypt-staging"
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-c"]
+    environment = {
+      KUBECONFIG = var.cluster_kubeconfig
     }
-    spec = {
-      acme = {
-        email = local.email
-        privateKeySecretRef = {
-          name = "letsencrypt-staging"
-        }
-        server = "https://acme-staging-v02.api.letsencrypt.org/directory"
-        solvers = [
-          {
-            dns01 = {
-              route53 = {
-                region = var.region
-              }
-            }
-            selector = {
-              dnsZones = [
-                var.route53_domain,
-              ]
-            }
-          },
-        ]
-      }
-    }
+    command = "echo \"${self.triggers.manifest}\" | kubectl apply --kubeconfig <(echo $KUBECONFIG | base64 -d) -f -"
   }
-}
-
-resource "kubernetes_manifest" "cluster_issuer_le_prod_http01" {
-  count = var.enable_cert_manager ? 1 : 0
-  depends_on = [
-    helm_release.cert_manager
-  ]
-  manifest = {
-    apiVersion = "cert-manager.io/v1"
-    kind       = "ClusterIssuer"
-    metadata = {
-      name = "letsencrypt-prod-http"
+  provisioner "local-exec" {
+    when        = destroy
+    interpreter = ["/bin/bash", "-c"]
+    environment = {
+      KUBECONFIG = self.triggers.kubeconfig
     }
-    spec = {
-      acme = {
-        email = local.email
-        privateKeySecretRef = {
-          name = "letsencrypt-prod-http"
-        }
-        server = "https://acme-v02.api.letsencrypt.org/directory"
-        solvers = [
-          {
-            http01 = {
-              ingress = {
-                class = "nginx"
-              }
-            }
-          },
-        ]
-      }
-    }
-  }
-}
-
-resource "kubernetes_manifest" "cluster_issuer_le_staging_http01" {
-  count = var.enable_cert_manager ? 1 : 0
-  depends_on = [
-    helm_release.cert_manager
-  ]
-  manifest = {
-    apiVersion = "cert-manager.io/v1"
-    kind       = "ClusterIssuer"
-    metadata = {
-      name = "letsencrypt-staging-http"
-    }
-    spec = {
-      acme = {
-        email = local.email
-        privateKeySecretRef = {
-          name = "letsencrypt-staging-http"
-        }
-        server = "https://acme-staging-v02.api.letsencrypt.org/directory"
-        solvers = [
-          {
-            http01 = {
-              ingress = {
-                class = "nginx"
-              }
-            }
-          },
-        ]
-      }
-    }
+    command = "echo \"${self.triggers.manifest}\" | kubectl delete --kubeconfig <(echo $KUBECONFIG | base64 -d) -f -"
   }
 }
