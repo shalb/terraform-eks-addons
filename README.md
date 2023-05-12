@@ -38,7 +38,6 @@ Terraform module that install core addons in EKS cluster:
 | argocd\_password\_bcrypted | Bctypted password (hash) for argocd web ui | `string` | `""` | no |
 | cert\_manager\_version | Cert manager helm chart version | `string` | `"v1.5.4"` | no |
 | cluster\_autoscaler\_version | Cluster utoscaler helm chart version | `string` | `"9.27.0"` | no |
-| cluster\_kubeconfig | EKS cluster kubeconfig base64 encoded | `string` | n/a | yes |
 | cluster\_name | EKS cluster name | `string` | n/a | yes |
 | cluster\_oidc\_issuer\_url | The URL on the EKS cluster for the OpenID Connect identity provider | `string` | n/a | yes |
 | cluster\_oidc\_provider\_arn | The ARN of the OIDC Provider if enable\_irsa = true | `string` | n/a | yes |
