@@ -37,7 +37,7 @@ resource "null_resource" "cluster_issuers" {
       TOKEN          = data.aws_eks_cluster_auth.cluster.token
       KUBECONFIG     = var.cluster_kubeconfig
     }
-    command = "echo \"${self.triggers.manifest}\" | kubectl apply -s $KUBE_HOST --TOKEN $token --certificate-authority $(echo $CA_CERTIFICATE | base64 -d > /tmp/ca0011; echo /tmp/ca0011) -f -"
+    command = "echo \"${self.triggers.manifest}\" | kubectl apply -s $KUBE_HOST --token $TOKEN --certificate-authority $(echo $CA_CERTIFICATE | base64 -d > /tmp/ca0011; echo /tmp/ca0011) -f -"
   }
   #   provisioner "local-exec" {
   #     when        = destroy
