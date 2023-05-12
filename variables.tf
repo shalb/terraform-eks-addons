@@ -25,11 +25,6 @@ variable "cluster_oidc_provider_arn" {
   type        = string
 }
 
-variable "cluster_kubeconfig" {
-  type        = string
-  description = "EKS cluster kubeconfig base64 encoded"
-}
-
 variable "cluster_subnets" {
   type        = list(any)
   default     = []

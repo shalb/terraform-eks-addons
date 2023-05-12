@@ -21,7 +21,6 @@ resource "null_resource" "cluster_issuers" {
     helm_release.cert_manager
   ]
   triggers = {
-    kubeconfig = var.cluster_kubeconfig
     manifest = templatefile("${path.module}/templates/issuers.yaml", {
       email             = local.email,
       region            = var.region,
@@ -35,16 +34,17 @@ resource "null_resource" "cluster_issuers" {
       KUBE_HOST      = data.aws_eks_cluster.cluster.endpoint
       CA_CERTIFICATE = data.aws_eks_cluster.cluster.certificate_authority[0].data
       TOKEN          = data.aws_eks_cluster_auth.cluster.token
-      KUBECONFIG     = var.cluster_kubeconfig
     }
     command = "echo \"${self.triggers.manifest}\" | kubectl apply -s $KUBE_HOST --token $TOKEN --certificate-authority $(echo $CA_CERTIFICATE | base64 -d > /tmp/ca0011; echo /tmp/ca0011) -f -"
   }
-  #   provisioner "local-exec" {
-  #     when        = destroy
-  #     interpreter = ["/bin/bash", "-c"]
-  #     environment = {
-  #       KUBECONFIG = self.triggers.kubeconfig
-  #     }
-  #     command = "echo \"${self.triggers.manifest}\" | kubectl delete --kubeconfig <(echo $KUBECONFIG | base64 -d) -f -"
-  #   }
+    provisioner "local-exec" {
+      when        = destroy
+      interpreter = ["/bin/bash", "-c"]
+    environment = {
+      KUBE_HOST      = data.aws_eks_cluster.cluster.endpoint
+      CA_CERTIFICATE = data.aws_eks_cluster.cluster.certificate_authority[0].data
+      TOKEN          = data.aws_eks_cluster_auth.cluster.token
+    }
+      command = "echo \"${self.triggers.manifest}\" | kubectl delete -s $KUBE_HOST --token $TOKEN --certificate-authority $(echo $CA_CERTIFICATE | base64 -d > /tmp/ca0011; echo /tmp/ca0011) -f -"
+    }
 }
