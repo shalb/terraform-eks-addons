@@ -32,16 +32,19 @@ resource "null_resource" "cluster_issuers" {
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     environment = {
-      KUBECONFIG = var.cluster_kubeconfig
+      kube_host              = data.aws_eks_cluster.cluster.endpoint
+      cluster_ca_certificate = data.aws_eks_cluster.cluster.certificate_authority[0].data
+      token                  = data.aws_eks_cluster_auth.cluster.token
+      KUBECONFIG             = var.cluster_kubeconfig
     }
-    command = "echo \"${self.triggers.manifest}\" | kubectl apply --kubeconfig <(echo $KUBECONFIG | base64 -d) -f -"
+    command = "echo \"${self.triggers.manifest}\" | kubectl apply --server $kube_host --token $token --certificate-authority <(echo $cluster_ca_certificate | base64 -d) -f -"
   }
-  provisioner "local-exec" {
-    when        = destroy
-    interpreter = ["/bin/bash", "-c"]
-    environment = {
-      KUBECONFIG = self.triggers.kubeconfig
-    }
-    command = "echo \"${self.triggers.manifest}\" | kubectl delete --kubeconfig <(echo $KUBECONFIG | base64 -d) -f -"
-  }
+  #   provisioner "local-exec" {
+  #     when        = destroy
+  #     interpreter = ["/bin/bash", "-c"]
+  #     environment = {
+  #       KUBECONFIG = self.triggers.kubeconfig
+  #     }
+  #     command = "echo \"${self.triggers.manifest}\" | kubectl delete --kubeconfig <(echo $KUBECONFIG | base64 -d) -f -"
+  #   }
 }
