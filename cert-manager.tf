@@ -26,12 +26,13 @@ resource "null_resource" "cluster_issuers" {
       region            = var.region,
       enable_http       = var.enable_cert_manager_http_issuers,
       main_route53_zone = var.route53_domain,
+      kubeconfig        = local.kubeconfig
     })
   }
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     environment = {
-      KUBECONFIG = local.kubeconfig
+      KUBECONFIG = self.triggers.kubeconfig
     }
     command = "echo \"${self.triggers.manifest}\" | kubectl apply --kubeconfig <(echo $KUBECONFIG | base64 -d) -f -"
   }
@@ -39,7 +40,7 @@ resource "null_resource" "cluster_issuers" {
     when        = destroy
     interpreter = ["/bin/bash", "-c"]
     environment = {
-      KUBECONFIG = local.kubeconfig
+      KUBECONFIG = self.triggers.kubeconfig
     }
     command = "echo \"${self.triggers.manifest}\" | kubectl delete --kubeconfig <(echo $KUBECONFIG | base64 -d) -f -"
   }
