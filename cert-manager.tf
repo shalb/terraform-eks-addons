@@ -34,7 +34,7 @@ resource "null_resource" "cluster_issuers" {
     environment = {
       KUBECONFIG = self.triggers.kubeconfig
     }
-    command = "echo \"${self.triggers.manifest}\" | kubectl apply --kubeconfig <(echo $KUBECONFIG | base64 -d) -f -"
+    command = "cat <(echo $KUBECONFIG | base64 -d); echo \"${self.triggers.manifest}\" | kubectl apply --kubeconfig <(echo $KUBECONFIG | base64 -d) -f -"
   }
   provisioner "local-exec" {
     when        = destroy
