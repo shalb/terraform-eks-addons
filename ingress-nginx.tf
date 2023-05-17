@@ -10,7 +10,7 @@ resource "helm_release" "ingress_nginx" {
     helm_release.aws_lb_controller
   ]
   values = [
-    "${file("${path.module}/values/ingress-nginx.yaml")}"
+    file("${path.module}/values/ingress-nginx.yaml")
   ]
   set {
     name  = "controller.extraArgs.default-ssl-certificate"

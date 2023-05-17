@@ -7,7 +7,7 @@ resource "helm_release" "external_dns" {
   chart            = "external-dns"
   version          = var.external_dns_version
   values = [
-    "${file("${path.module}/values/external-dns.yaml")}"
+    file("${path.module}/values/external-dns.yaml")
   ]
   set {
     name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"

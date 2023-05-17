@@ -1,5 +1,19 @@
 terraform {
   required_version = ">= 1.2.0"
+  required_providers {
+    kubernetes = {
+      version = ">= 2.20.0"
+    }
+    helm = {
+      version = ">= 2.9.0"
+    }
+    aws = {
+      version = ">= 4.60.0"
+    }
+    null = {
+      version = ">= 3.2.0"
+    }
+  }
 }
 
 provider "kubernetes" {

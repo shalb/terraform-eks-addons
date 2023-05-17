@@ -29,4 +29,35 @@ locals {
     us-west-2      = "602401143452.dkr.ecr.us-west-2.amazonaws.com"
   } # https://docs.aws.amazon.com/eks/latest/userguide/add-ons-images.html
   aws_image_registry = local.efs_driver_images_map[var.region]
+
+  kubeconfig = yamlencode({
+    apiVersion      = "v1"
+    kind            = "Config"
+    current-context = "terraform"
+    clusters = [{
+      name = var.cluster_name
+      cluster = {
+        certificate-authority-data = data.aws_eks_cluster.cluster_certificate_authority_data
+        server                     = data.aws_eks_cluster.cluster.endpoint
+      }
+    }]
+    contexts = [{
+      name = "terraform"
+      context = {
+        cluster = var.cluster_name
+        user    = "terraform"
+      }
+    }]
+    users = [{
+      name = "terraform"
+      user = {
+        exec = {
+          apiVersion = "client.authentication.k8s.io/v1beta1"
+          args       = ["eks", "get-token", "--cluster-name", var.cluster_name]
+          command    = "aws"
+        }
+      }
+    }]
+  })
+  kubeconfig_base64 = base64encode(local.kubeconfig)
 }

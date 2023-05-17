@@ -10,7 +10,7 @@ resource "helm_release" "argocd" {
     null_resource.cluster_issuers
   ]
   values = [
-    "${file("${path.module}/values/argocd.yaml")}"
+    file("${path.module}/values/argocd.yaml")
   ]
   set {
     name  = "server.config.url"

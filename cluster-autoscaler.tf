@@ -6,7 +6,7 @@ resource "helm_release" "cluster_autoscaler" {
   chart      = "cluster-autoscaler"
   version    = var.cluster_autoscaler_version
   values = [
-    "${file("${path.module}/values/cluster-autoscaler.yaml")}"
+    file("${path.module}/values/cluster-autoscaler.yaml")
   ]
 
   set {
