@@ -26,8 +26,8 @@ resource "null_resource" "cluster_issuers" {
       region            = var.region,
       enable_http       = var.enable_cert_manager_http_issuers,
       main_route53_zone = var.route53_domain,
-      kubeconfig        = local.kubeconfig
     })
+    kubeconfig = local.kubeconfig
   }
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
