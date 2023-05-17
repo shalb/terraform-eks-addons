@@ -27,7 +27,7 @@ module "iam_policy_autoscaler" {
   count   = var.enable_cluster_autoscaler ? 1 : 0
   source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
   version = "~> 5.11"
-  name    = "ClusterAutoScaler-${var.cluster_name}"
+  name    = "ClusterAutoScaler-${random_id.id.hex}-${var.cluster_name}"
   policy  = <<-EOT
   {
     "Version": "2012-10-17",
@@ -62,5 +62,5 @@ module "iam_assumable_role_autoscaler" {
   ]
   oidc_fully_qualified_subjects = ["system:serviceaccount:kube-system:cluster-autoscaler-aws-cluster-autoscaler"]
   provider_url                  = var.cluster_oidc_issuer_url
-  role_name                     = "eks-autoscaler-${var.cluster_name}"
+  role_name                     = "eks-autoscaler-${random_id.id.hex}-${var.cluster_name}"
 }

@@ -21,7 +21,7 @@ module "attach_load_balancer_controller_policy" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> v5.11"
 
-  role_name = "aws-load-balancer-controller-${var.cluster_name}"
+  role_name = "aws-load-balancer-controller-${random_id.id.hex}-${var.cluster_name}"
 
   attach_load_balancer_controller_policy = true
   oidc_providers = {

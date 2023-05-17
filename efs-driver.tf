@@ -27,7 +27,7 @@ module "iam_assumable_role_efs" {
   source       = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version      = "~> v5.11"
   create_role  = true
-  role_name    = "eks-efs-${var.cluster_name}"
+  role_name    = "eks-efs-${random_id.id.hex}-${var.cluster_name}"
   provider_url = var.cluster_oidc_issuer_url
   role_policy_arns = [
     aws_iam_policy.efs[0].arn
@@ -37,7 +37,7 @@ module "iam_assumable_role_efs" {
 
 resource "aws_iam_policy" "efs" {
   count  = var.enable_efs ? 1 : 0
-  name   = "AllowEFS-${var.cluster_name}"
+  name   = "AllowEFS-${random_id.id.hex}-${var.cluster_name}"
   policy = <<-EOF
 {
   "Version": "2012-10-17",

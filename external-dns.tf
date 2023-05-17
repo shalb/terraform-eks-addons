@@ -30,7 +30,7 @@ resource "helm_release" "external_dns" {
 module "iam_policy_route53" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
   version = "~> 5.11"
-  name    = "AllowExternalDNSUpdates-${var.cluster_name}"
+  name    = "AllowExternalDNSUpdates-${random_id.id.hex}-${var.cluster_name}"
   policy  = <<-EOT
   {
     "Version": "2012-10-17",
@@ -74,5 +74,5 @@ module "iam_assumable_role_route53" {
     "system:serviceaccount:cert-manager:cert-manager"
   ]
   provider_url = var.cluster_oidc_issuer_url
-  role_name    = "eks-route53-${var.cluster_name}"
+  role_name    = "eks-route53-${random_id.id.hex}-${var.cluster_name}"
 }

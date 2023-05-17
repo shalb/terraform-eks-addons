@@ -24,6 +24,7 @@ Terraform module that install core addons in EKS cluster:
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.9.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.20.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.2.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.0.0 |
 
 ## Providers
 
@@ -32,6 +33,7 @@ Terraform module that install core addons in EKS cluster:
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 4.66.1 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 2.9.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | >= 3.2.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 3.0.0 |
 
 ## Modules
 
@@ -62,6 +64,7 @@ Terraform module that install core addons in EKS cluster:
 | [helm_release.kubernetes_metrics_server](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.reloader](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [null_resource.cluster_issuers](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
+| [random_id.id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
 | [aws_eks_cluster.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
 | [aws_eks_cluster_auth.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster_auth) | data source |
 

@@ -13,6 +13,9 @@ terraform {
     null = {
       version = ">= 3.2.0"
     }
+    random = {
+      version = ">= 3.0.0"
+    }
   }
 }
 
