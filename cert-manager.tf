@@ -32,7 +32,7 @@ resource "null_resource" "cluster_issuers" {
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     environment = {
-      KUBECONFIG = base64encode(self.triggers.kubeconfig)
+      KUBECONFIG = self.triggers.kubeconfig
     }
     command = "echo \"${self.triggers.manifest}\" | kubectl apply --kubeconfig <(echo $KUBECONFIG | base64 -d) -f -"
   }
