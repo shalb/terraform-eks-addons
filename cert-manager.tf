@@ -27,12 +27,12 @@ resource "null_resource" "cluster_issuers" {
       enable_http       = var.enable_cert_manager_http_issuers,
       main_route53_zone = var.route53_domain,
     })
-    kubeconfig = local.kubeconfig
+    kubeconfig = local.kubeconfig_base64
   }
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     environment = {
-      KUBECONFIG = self.triggers.kubeconfig
+      KUBECONFIG = base64encode(self.triggers.kubeconfig)
     }
     command = "echo \"${self.triggers.manifest}\" | kubectl apply --kubeconfig <(echo $KUBECONFIG | base64 -d) -f -"
   }
