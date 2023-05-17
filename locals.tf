@@ -37,7 +37,7 @@ locals {
     clusters = [{
       name = var.cluster_name
       cluster = {
-        certificate-authority-data = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
+        certificate-authority-data = data.aws_eks_cluster.cluster.certificate_authority[0].data
         server                     = data.aws_eks_cluster.cluster.endpoint
       }
     }]
