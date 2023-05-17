@@ -1,3 +1,16 @@
+resource "null_resource" "lb_delete_delay" {
+  count = var.enable_nginx ? 1 : 0
+  depends_on = [
+    helm_release.aws_lb_controller
+  ]
+  provisioner "local-exec" {
+    when        = destroy
+    interpreter = ["/bin/sh", "-c"]
+    command     = "echo Wait && sleep 60"
+  }
+}
+
+
 resource "helm_release" "ingress_nginx" {
   count            = var.enable_nginx ? 1 : 0
   chart            = "ingress-nginx"
@@ -7,7 +20,7 @@ resource "helm_release" "ingress_nginx" {
   name             = "ingress-nginx"
   repository       = "https://kubernetes.github.io/ingress-nginx"
   depends_on = [
-    helm_release.aws_lb_controller
+    null_resource.lb_delete_delay
   ]
   values = [
     file("${path.module}/values/ingress-nginx.yaml")
