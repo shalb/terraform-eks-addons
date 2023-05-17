@@ -31,7 +31,7 @@ resource "null_resource" "cluster_issuers" {
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     environment = {
-      KUBECONFIG = var.cluster_kubeconfig
+      KUBECONFIG = local.kubeconfig
     }
     command = "echo \"${self.triggers.manifest}\" | kubectl apply --kubeconfig <(echo $KUBECONFIG | base64 -d) -f -"
   }
@@ -39,7 +39,7 @@ resource "null_resource" "cluster_issuers" {
     when        = destroy
     interpreter = ["/bin/bash", "-c"]
     environment = {
-      KUBECONFIG = self.triggers.kubeconfig
+      KUBECONFIG = local.kubeconfig
     }
     command = "echo \"${self.triggers.manifest}\" | kubectl delete --kubeconfig <(echo $KUBECONFIG | base64 -d) -f -"
   }
