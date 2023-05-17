@@ -16,7 +16,7 @@ module "iam_assumable_role_external_secrets" {
   source       = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version      = "~> v5.11"
   create_role  = true
-  role_name    = "eks-external-secrets-${var.cluster_name}"
+  role_name    = "eks-external-secrets-${random_id.id.hex}-${var.cluster_name}"
   provider_url = var.cluster_oidc_issuer_url
   role_policy_arns = [
     aws_iam_policy.external_secrets[0].arn
@@ -26,7 +26,7 @@ module "iam_assumable_role_external_secrets" {
 
 resource "aws_iam_policy" "external_secrets" {
   count  = var.enable_external_secrets ? 1 : 0
-  name   = "AllowExternalSecrets-${var.cluster_name}"
+  name   = "AllowExternalSecrets-${random_id.id.hex}-${var.cluster_name}"
   policy = <<-EOF
 {
   "Version": "2012-10-17",
