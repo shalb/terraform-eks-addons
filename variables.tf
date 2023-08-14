@@ -1,6 +1,6 @@
 variable "argocd_chart_version" {
   type        = string
-  default     = "3.29.5"
+  default     = "5.43.3"
   description = "Argocd helm chart version"
 }
 
