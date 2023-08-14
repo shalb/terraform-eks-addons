@@ -6,7 +6,7 @@ variable "argocd_chart_version" {
 
 variable "argocd_image_tag" {
   type        = string
-  default     = "v2.2.2"
+  default     = "v2.8.0"
   description = "Argocd docker image version"
 }
 
