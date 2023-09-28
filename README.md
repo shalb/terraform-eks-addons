@@ -1,19 +1,64 @@
 # AWS EKS Terraform Module
 
-Terraform module that install core addons in EKS cluster:
+[![Cluster.dev logo](https://raw.githubusercontent.com/shalb/cluster.dev/master/docs/images/cdev-module-banner.png?sanitize=true)](https://cluster.dev/)
 
-1. argocd
-2. ingress-nginx
-3. external-dns
-4. cluster autoscaler
-6. external-secrets
-7. cert-manager
-8. efs driver
-9. aws lb controller
+Terraform module that installs core add-ons to Elastic Kubernetes Service (EKS) cluster. This Terraform module is also used as part of the [AWS-EKS Cluster.dev stack template](https://github.com/shalb/cdev-aws-eks) to start and provision an EKS cluster with add-ons in AWS cloud. 
 
+## Features
 
-## Prerequisites
+The module installs the following add-ons to an EKS cluster:
 
+1. **Argo CD**: Continuous Delivery for Kubernetes. 
+   
+2. **Ingress-Nginx**: A high-performance, production-ready HTTP and HTTPS Ingress controller for Kubernetes.
+   
+3. **External-DNS**: Automatically configure DNS records for your Kubernetes services.
+   
+4. **Cluster Autoscaler**: Automatically adjust the size of your worker node group based on resource utilization.
+   
+5. **External-Secrets**: Manage sensitive information securely in Kubernetes using AWS Secrets Manager.
+    
+6. **Cert-Manager**: Automate the management and issuance of TLS certificates for your applications.
+    
+7. **EFS Driver**: Mount Amazon Elastic File System (EFS) volumes to your pods.
+    
+8. **AWS Load Balancer Controller**: Automatically configure and manage AWS Load Balancers for your services.
+
+## Usage   
+
+To use this Terraform module to provision an EKS cluster with the specified add-ons, follow these steps:
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/shalb/terraform-eks-addons.git
+   ```
+
+2. **Configure variables**: Create a `terraform.tfvars` file or provide variables inline to customize your EKS cluster and add-on configurations. For example:
+   ```hcl
+   cluster_name = "my-eks-cluster"
+   region       = "us-west-2"
+   # Add-on configuration
+   enable_argocd            = true
+   enable_ingress_nginx     = true
+   enable_external_dns      = true
+   enable_cluster_autoscaler = true
+   enable_external_secrets  = true
+   enable_cert_manager      = true
+   enable_efs_driver        = true
+   enable_aws_lb_controller = true
+   ```
+3. **Apply the configuration**:
+   ```hcl
+   terraform apply
+   ```
+
+4. **Access Kubernetes cluster**: After the provisioning is complete, you can access your EKS cluster using `kubectl`:
+   ```css
+   aws eks --region <region> update-kubeconfig --name <cluster_name>
+   ```
+
+5. **Manage add-ons**: The specified add-ons will be automatically deployed and configured in your EKS cluster.
+   
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
